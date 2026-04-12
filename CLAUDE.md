@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-`dataset-builder` is a Python 3.12 project managed with `pyproject.toml`. It is in early development with no dependencies yet declared.
+`dataset-builder` builds training datasets for Whisper fine-tuning by reading lesson files from S3 (JSON transcript, VTT subtitles, MP3 audio), aligning them, and producing `stable_whisper.result.Segment` objects.
 
 ## Commands
 
@@ -21,10 +21,39 @@ uv sync
 
 ## Structure
 
-- `main.py` — entry point; contains the `main()` function
-- `pyproject.toml` — project metadata and dependency declarations (PEP 517/518)
-- `.python-version` — pins Python to 3.12 (used by pyenv/uv)
+```
+src/dataset_builder/
+├── domain/                    # Domain models and ABCs
+│   ├── file_manager.py        # FileManager ABC
+│   ├── models.py              # Word, Transcript, VttCue, Vtt
+│   ├── parser.py              # Parser[T] ABC
+│   └── segment_result.py      # AlignmentStatus, SegmentResult
+├── infrastructure/            # Implementations
+│   ├── s3_client.py           # S3Client (FileManager impl)
+│   ├── json_parser.py         # JsonParser (stable_whisper JSON → Transcript)
+│   ├── vtt_parser.py          # VttParser (VTT → Vtt)
+│   ├── segment_parser.py      # SegmentParser (alignment + Segment building)
+│   └── dependency_injection.py # DI container
+├── services/                  # Business logic
+│   ├── reader.py              # DatasetReader (S3 file fetching)
+│   └── processor.py           # LessonProcessor (orchestration)
+└── config.py                  # Config dataclass
+```
 
-## Skills & Patterns
+## Key Concepts
 
-Read `.claude/skills/python-project-builder.md` for the established project structure pattern used across this codebase — covers Lambda layout, dependency injection, AWS client wrappers, service layer, configuration, and local testing conventions.
+- **Transcript**: Flattened list of words from stable_whisper JSON (word, start, end, probability)
+- **Vtt**: List of VttCues (start, end, text, duration)
+- **SegmentResult**: Aligned segments with status (OK/TRUNCATED/NO_DATA) and truncate_at timestamp
+- **Segment**: `stable_whisper.result.Segment` with `WordTiming` objects
+
+## S3 Buckets
+
+- `final-transcription` — JSON and VTT files (`{id}.json`, `{id}.vtt`)
+- `portal-daf-yomi-audio` — MP3 files (`{id}.mp3`)
+
+## Patterns
+
+- Dependency injection via `dependency-injector`
+- Abstract base classes in domain, implementations in infrastructure
+- AWS profile defaults to `portal`

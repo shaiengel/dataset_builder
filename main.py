@@ -26,8 +26,8 @@ def main():
                 print(f"  truncate at     : {sr.truncate_at:.3f}s")
             if sr.mismatch_info:
                 print(f"  mismatch info   : {sr.mismatch_info}")
-        if lesson.audio:
-            print(f"  audio           : {len(lesson.audio)} bytes")
+        if lesson.wav_path:
+            print(f"  wav_path        : {lesson.wav_path}")
 
 
 if __name__ == "__main__":
