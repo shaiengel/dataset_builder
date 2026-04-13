@@ -28,6 +28,8 @@ def main():
                 print(f"  mismatch info   : {sr.mismatch_info}")
         if lesson.wav_path:
             print(f"  wav_path        : {lesson.wav_path}")
+        if lesson.dataset:
+            print(f"  dataset rows    : {len(lesson.dataset)}")
 
 
 if __name__ == "__main__":

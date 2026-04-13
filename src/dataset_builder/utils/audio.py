@@ -14,3 +14,14 @@ def convert_mp3_to_wav(
     audio = audio.set_channels(1).set_frame_rate(sample_rate)
     audio.export(output_path, format="wav")
     return output_path
+
+
+def truncate_wav(
+    wav_path: Path,
+    truncate_at_seconds: float,
+) -> None:
+    """Truncate WAV file at the specified timestamp (in-place)."""
+    audio = AudioSegment.from_wav(wav_path)
+    truncate_at_ms = int(truncate_at_seconds * 1000)
+    truncated = audio[:truncate_at_ms]
+    truncated.export(wav_path, format="wav")

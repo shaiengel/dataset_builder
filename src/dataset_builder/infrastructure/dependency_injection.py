@@ -6,6 +6,7 @@ from dataset_builder.infrastructure.json_parser import JsonParser
 from dataset_builder.infrastructure.s3_client import S3Client
 from dataset_builder.infrastructure.segment_parser import SegmentParser
 from dataset_builder.infrastructure.vtt_parser import VttParser
+from dataset_builder.infrastructure.whisper_dataset_generator import WhisperDatasetGenerator
 from dataset_builder.services.processor import LessonProcessor
 from dataset_builder.services.reader import DatasetReader
 
@@ -41,10 +42,13 @@ class DependenciesContainer(containers.DeclarativeContainer):
 
     segment_parser = providers.Singleton(SegmentParser)
 
+    dataset_generator = providers.Singleton(WhisperDatasetGenerator)
+
     processor = providers.Singleton(
         LessonProcessor,
         reader=reader,
         json_parser=json_parser,
         vtt_parser=vtt_parser,
         segment_parser=segment_parser,
+        dataset_generator=dataset_generator,
     )
