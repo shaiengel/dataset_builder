@@ -298,15 +298,19 @@ class WhisperDatasetGenerator(DatasetGenerator):
         return result_slices
     
     def _get_slice_audio_data(self, audio_loader: AudioLoader, slice, slice_length):
-        audio_start_sec = slice["seek"]
-        seek_sample = int(audio_start_sec * self._sample_rate)
-        slice_length_samples = int(slice_length * self._sample_rate)
-        audio_data = audio_loader.next_chunk(seek_sample, slice_length_samples)
-        slice_audio_data_as_mp3 = AudioSample(
-            audio_data.numpy(), force_read_format="s16le", force_read_sample_rate=self._sample_rate
-        ).as_data(no_encode=False, force_out_format="mp3")
+        try:
+            audio_start_sec = slice["seek"]
+            seek_sample = int(audio_start_sec * self._sample_rate)
+            slice_length_samples = int(slice_length * self._sample_rate)
+            audio_data = audio_loader.next_chunk(seek_sample, slice_length_samples)
+            slice_audio_data_as_mp3 = AudioSample(
+                audio_data.numpy(), force_read_format="s16le", force_read_sample_rate=self._sample_rate
+            ).as_data(no_encode=False, force_out_format="mp3")
 
-        return slice_audio_data_as_mp3
+            return slice_audio_data_as_mp3
+        except Exception as e:
+            logger.error(f"Error loading audio for slice seek {float(slice['seek']):.2f}: {e}")
+            raise e
     
     def _get_timestamp_token_text(self, seconds: float) -> str:
         """
@@ -477,10 +481,16 @@ class WhisperDatasetGenerator(DatasetGenerator):
                 
                 # Create dataset from examples if we have any
                 if examples:
-                    file_dataset = Dataset.from_list(examples, features=dataset_features)                    
-                    
+                    try:
+                        file_dataset = Dataset.from_list(examples, features=dataset_features)
+                    except Exception as e:
+                        logger.error(f"Error creating dataset from {len(examples)} examples: {e}")
+
             finally:
-                audio_loader.terminate()
+                try:
+                    audio_loader.terminate()
+                except Exception as e:
+                    logger.error(f"Error terminating audio loader: {e}")
                 
         except Exception as e:
             logger.error(f"Error processing {audio_file}: {e}")    
