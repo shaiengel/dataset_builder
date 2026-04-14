@@ -6,6 +6,18 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 `dataset-builder` builds training datasets for Whisper fine-tuning by reading lesson files from S3 (JSON transcript, VTT subtitles, MP3 audio), aligning them, and producing `stable_whisper.result.Segment` objects.
 
+## Prerequisites
+
+### ffmpeg (Windows)
+
+ffmpeg is required for MP3-to-WAV conversion. Install via winget:
+
+```powershell
+winget install --id Gyan.FFmpeg
+```
+
+Then restart your terminal so `ffmpeg` is on `PATH`.
+
 ## Commands
 
 ```bash
