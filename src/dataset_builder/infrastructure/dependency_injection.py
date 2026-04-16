@@ -7,6 +7,7 @@ from dataset_builder.infrastructure.s3_client import S3Client
 from dataset_builder.infrastructure.segment_parser import SegmentParser
 from dataset_builder.infrastructure.vtt_parser import VttParser
 from dataset_builder.infrastructure.whisper_dataset_generator import WhisperDatasetGenerator
+from dataset_builder.infrastructure.hf_dataset_manager import HuggingFaceDatasetManager
 from dataset_builder.services.processor import LessonProcessor
 from dataset_builder.services.reader import DatasetReader
 
@@ -44,6 +45,8 @@ class DependenciesContainer(containers.DeclarativeContainer):
 
     dataset_generator = providers.Singleton(WhisperDatasetGenerator)
 
+    dataset_manager = providers.Singleton(HuggingFaceDatasetManager)
+
     processor = providers.Singleton(
         LessonProcessor,
         reader=reader,
@@ -51,4 +54,6 @@ class DependenciesContainer(containers.DeclarativeContainer):
         vtt_parser=vtt_parser,
         segment_parser=segment_parser,
         dataset_generator=dataset_generator,
+        dataset_manager=dataset_manager,
+        config=config,
     )

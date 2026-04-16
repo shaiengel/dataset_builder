@@ -1,14 +1,11 @@
 import logging
 
-from dotenv import load_dotenv
-
 from dataset_builder.infrastructure.dependency_injection import DependenciesContainer
 
 LESSON_IDS = ["151828"]
 
 
 def main():
-    load_dotenv()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     container = DependenciesContainer()
     processor = container.processor()
