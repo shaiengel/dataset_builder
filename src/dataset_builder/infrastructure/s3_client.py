@@ -26,3 +26,14 @@ class S3Client(FileManager):
         except ClientError as e:
             logger.error(f"Failed to get s3://{bucket}/{key}: {e}")
             return None
+
+    def list_keys(self, bucket: str, suffix: str = "") -> list[str]:
+        keys = []
+        paginator = self._client.get_paginator("list_objects_v2")
+        for page in paginator.paginate(Bucket=bucket):
+            for obj in page.get("Contents", []):
+                key = obj["Key"]
+                if not suffix or key.endswith(suffix):
+                    keys.append(key)
+        logger.info(f"Listed {len(keys)} keys in s3://{bucket} (suffix={suffix!r})")
+        return keys

@@ -56,6 +56,8 @@ class LessonProcessor:
             for id in ids:
                 logger.info("[%s] Reading files from S3", id)
                 data = self._reader.read(id)
+                if data is None:
+                    continue
 
                 logger.info("[%s] Parsing transcript and VTT", id)
                 transcript = self._json_parser.parse(data["json"]) if data["json"] else None

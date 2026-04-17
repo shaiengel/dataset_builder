@@ -2,6 +2,21 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "HF: load, split & upload dataset",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "dataset_builder.infrastructure.hf_dataset_manager",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "AWS_PROFILE": "portal"
+            },
+            "args": [
+                "--repo-id", "your-org/your-dataset-name",
+                "--test-size", "0.1"
+            ]
+        },
+        {
             "name": "Python: main.py",
             "type": "debugpy",
             "request": "launch",

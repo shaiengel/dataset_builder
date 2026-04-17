@@ -2,14 +2,14 @@ import logging
 
 from dataset_builder.infrastructure.dependency_injection import DependenciesContainer
 
-LESSON_IDS = ["151828"]
-
 
 def main():
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     container = DependenciesContainer()
+    reader = container.reader()
+    ids = reader.list_ids()
     processor = container.processor()
-    results = processor.process(LESSON_IDS)
+    results = processor.process(ids)
 
     for lesson in results:
         print(f"\n=== Lesson {lesson.id} ===")

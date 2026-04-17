@@ -11,3 +11,8 @@ class FileManager(ABC):
     def get_bytes(self, bucket: str, key: str) -> bytes | None:
         """Read a file and return its raw bytes."""
         ...
+
+    @abstractmethod
+    def list_keys(self, bucket: str, suffix: str = "") -> list[str]:
+        """List all keys in a bucket, optionally filtered by suffix."""
+        ...

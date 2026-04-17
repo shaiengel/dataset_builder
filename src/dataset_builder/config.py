@@ -9,8 +9,8 @@ load_dotenv(".env.secret")
 
 @dataclass
 class Config:
-    transcription_bucket: str = "final-transcription"
-    audio_bucket: str = "portal-daf-yomi-audio"
+    transcription_bucket: str = field(default_factory=lambda: os.getenv("TRANSCRIPTION_BUCKET", "final-transcription"))
+    audio_bucket: str = field(default_factory=lambda: os.getenv("AUDIO_BUCKET", "portal-daf-yomi-audio"))
     aws_region: str = field(default_factory=lambda: os.getenv("AWS_REGION", "us-east-1"))
     aws_profile: str = field(default_factory=lambda: os.getenv("AWS_PROFILE", "portal"))
     output_dataset_path: str = field(default_factory=lambda: os.getenv("OUTPUT_DATASET_PATH", "output/dataset"))

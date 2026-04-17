@@ -1,3 +1,4 @@
+import argparse
 import logging
 
 from datasets import Dataset, DatasetDict, concatenate_datasets, load_from_disk
@@ -34,3 +35,22 @@ class HuggingFaceDatasetManager(DatasetManager):
         logger.info("Uploading dataset to hub: %s", repo_id)
         dataset.push_to_hub(repo_id, max_shard_size="500MB")
         logger.info("Upload complete")
+
+
+if __name__ == "__main__":
+    from dataset_builder.config import Config
+
+    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
+
+    config = Config()
+
+    parser = argparse.ArgumentParser(description="Load, split, and upload dataset to HuggingFace Hub")
+    parser.add_argument("--dataset-path", default=config.output_dataset_path, help="Path to dataset on disk")
+    parser.add_argument("--repo-id", required=True, help="HuggingFace Hub repo ID (e.g. org/dataset-name)")
+    parser.add_argument("--test-size", type=float, default=0.1, help="Fraction of data for test split (default: 0.1)")
+    args = parser.parse_args()
+
+    manager = HuggingFaceDatasetManager()
+    dataset = manager.load_dataset_from_disk(args.dataset_path)
+    split = manager.split_dataset(dataset, test_size=args.test_size)
+    manager.upload_dataset_to_hub(split, args.repo_id)
