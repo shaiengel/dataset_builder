@@ -26,6 +26,7 @@ class ProcessedLesson:
     segment_result: SegmentResult | None
     wav_path: Path | None
     dataset: Dataset | None
+    skip_reason: str | None = None
 
 
 class LessonProcessor:
@@ -57,6 +58,7 @@ class LessonProcessor:
                 logger.info("[%s] Reading files from S3", id)
                 data = self._reader.read(id)
                 if data is None:
+                    results.append(ProcessedLesson(id=id, transcript=None, vtt=None, segment_result=None, wav_path=None, dataset=None, skip_reason="failed to read from S3"))
                     continue
 
                 logger.info("[%s] Parsing transcript and VTT", id)
@@ -104,7 +106,7 @@ class LessonProcessor:
                         wav_path=wav_path,
                         dataset=dataset,
                     )
-                )
+                )                
 
         if all_datasets:
             combined = self._dataset_manager.concatenate_all_datasets(all_datasets)
