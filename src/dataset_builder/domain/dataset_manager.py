@@ -1,6 +1,7 @@
 from abc import ABC, abstractmethod
 
 from datasets import Dataset, DatasetDict
+from huggingface_hub import DatasetCard
 
 
 class DatasetManager(ABC):
@@ -18,4 +19,17 @@ class DatasetManager(ABC):
     def split_dataset(self, dataset: Dataset, test_size: float = 0.1) -> DatasetDict: ...
 
     @abstractmethod
-    def upload_dataset_to_hub(self, dataset: Dataset | DatasetDict, repo_id: str) -> None: ...
+    def upload_dataset_to_hub(self, dataset: Dataset | DatasetDict, repo_id: str, max_shard_size: str = "500MB") -> None: ...
+
+    @abstractmethod
+    def create_dataset_card(
+        self,
+        language: str,
+        license: str,
+        description: str,
+        pretty_name: str,
+        template_path: str | None = None,
+    ) -> DatasetCard: ...
+
+    @abstractmethod
+    def upload_dataset_card_to_hub(self, card: DatasetCard, repo_id: str) -> None: ...

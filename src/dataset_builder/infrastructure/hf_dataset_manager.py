@@ -2,6 +2,7 @@ import argparse
 import logging
 
 from datasets import Dataset, DatasetDict, concatenate_datasets, load_from_disk
+from huggingface_hub import DatasetCard, DatasetCardData
 
 from dataset_builder.domain.dataset_manager import DatasetManager
 
@@ -31,10 +32,31 @@ class HuggingFaceDatasetManager(DatasetManager):
         logger.info("Train: %d rows, Test: %d rows", len(split["train"]), len(split["test"]))
         return split
 
-    def upload_dataset_to_hub(self, dataset: Dataset | DatasetDict, repo_id: str) -> None:
+    def upload_dataset_to_hub(self, dataset: Dataset | DatasetDict, repo_id: str, max_shard_size: str = "500MB") -> None:
         logger.info("Uploading dataset to hub: %s", repo_id)
-        dataset.push_to_hub(repo_id, max_shard_size="500MB")
+        dataset.push_to_hub(repo_id, max_shard_size=max_shard_size)
         logger.info("Upload complete")
+
+    def create_dataset_card(
+        self,
+        language: str,
+        license: str,
+        description: str,
+        pretty_name: str,
+        template_path: str | None = None,
+    ) -> DatasetCard:
+        card_data = DatasetCardData(
+            language=language,
+            license=license,
+            dataset_description=description,
+            pretty_name=pretty_name,
+        )
+        return DatasetCard.from_template(card_data, template_path=template_path)
+
+    def upload_dataset_card_to_hub(self, card: DatasetCard, repo_id: str) -> None:
+        logger.info("Uploading dataset card to hub: %s", repo_id)
+        card.push_to_hub(repo_id=repo_id, repo_type="dataset")
+        logger.info("Dataset card upload complete")
 
 
 if __name__ == "__main__":
@@ -47,10 +69,23 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Load, split, and upload dataset to HuggingFace Hub")
     parser.add_argument("--dataset-path", default=config.output_dataset_path, help="Path to dataset on disk")
     parser.add_argument("--repo-id", required=True, help="HuggingFace Hub repo ID (e.g. org/dataset-name)")
-    parser.add_argument("--test-size", type=float, default=0.1, help="Fraction of data for test split (default: 0.1)")
+    parser.add_argument("--test-size", type=float, default=config.test_size, help="Fraction of data for test split")
+    parser.add_argument("--language", default=config.card_language, help="Dataset language code")
+    parser.add_argument("--license", default=config.card_license, help="Dataset license")
+    parser.add_argument("--description", default=config.card_description, help="Dataset description")
+    parser.add_argument("--pretty-name", default=config.card_pretty_name, help="Dataset pretty name")
+    parser.add_argument("--template-path", default=config.card_template_path, help="Path to dataset card template")
     args = parser.parse_args()
 
     manager = HuggingFaceDatasetManager()
     dataset = manager.load_dataset_from_disk(args.dataset_path)
     split = manager.split_dataset(dataset, test_size=args.test_size)
-    manager.upload_dataset_to_hub(split, args.repo_id)
+    manager.upload_dataset_to_hub(split, args.repo_id, max_shard_size=config.max_shard_size)
+    card = manager.create_dataset_card(
+        language=args.language,
+        license=args.license,
+        description=args.description,
+        pretty_name=args.pretty_name,
+        template_path=args.template_path,
+    )
+    manager.upload_dataset_card_to_hub(card, args.repo_id)

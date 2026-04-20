@@ -1,6 +1,10 @@
 import logging
+from pathlib import Path
 
 from dataset_builder.infrastructure.dependency_injection import DependenciesContainer
+from dataset_builder.services.progress_tracker import filter_new_ids, save_progress
+
+PROGRESS_FILE = Path("progress.json")
 
 
 def main():
@@ -8,6 +12,7 @@ def main():
     container = DependenciesContainer()
     reader = container.reader()
     ids = reader.list_ids()
+    ids = filter_new_ids(ids, PROGRESS_FILE)
     processor = container.processor()
     results = processor.process(ids)
 
@@ -41,6 +46,9 @@ def main():
             print(f"    [{lesson_id}] {info}")
     else:
         print(f"  issues   : none")
+
+    processed_ids = [lesson.id for lesson in results if lesson.segment_result is not None]
+    save_progress(processed_ids, int(total_duration), PROGRESS_FILE)
 
 
 if __name__ == "__main__":
