@@ -21,3 +21,4 @@ class Config:
     card_template_path: str | None = field(default_factory=lambda: os.getenv("CARD_TEMPLATE_PATH"))
     max_shard_size: str = field(default_factory=lambda: os.getenv("MAX_SHARD_SIZE", "500MB"))
     test_size: float = field(default_factory=lambda: float(os.getenv("TEST_SIZE", "0.1")))
+    hf_token: str | None = field(default_factory=lambda: os.getenv("HF_TOKEN"))

@@ -14,7 +14,10 @@ def save_progress(ids: list[str], duration: int, progress_file: Path) -> None:
     if progress_file.exists():
         data = json.loads(progress_file.read_text())
     else:
-        data = {"datasets": [], "total_duration": 0}
+        data = {}
+
+    data.setdefault("datasets", [])
+    data.setdefault("total_duration", 0)
 
     existing_ids = {d["dataset_id"] for d in data["datasets"]}
     next_id = max(existing_ids) + 1 if existing_ids else 1

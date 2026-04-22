@@ -4,7 +4,6 @@ from dataclasses import dataclass
 from pathlib import Path
 
 from datasets import Dataset
-
 from dataset_builder.config import Config
 from dataset_builder.domain.dataset_generator import DatasetGenerator
 from dataset_builder.domain.models import Transcript, Vtt
@@ -74,7 +73,10 @@ class LessonProcessor:
                 wav_path = None
                 if data["audio"]:
                     logger.info("[%s] Converting MP3 to WAV", id)
-                    wav_path = convert_mp3_to_wav(data["audio"], tmp_path / f"{id}.wav")
+                    try:
+                        wav_path = convert_mp3_to_wav(data["audio"], tmp_path / f"{id}.wav")
+                    except Exception as e:
+                        logger.warning("[%s] Skipping — failed to convert MP3: %s", id, e)
 
                 dataset = None
                 if segment_result and wav_path:

@@ -1,4 +1,5 @@
 import logging
+import sys
 from pathlib import Path
 
 from dataset_builder.infrastructure.dependency_injection import DependenciesContainer
@@ -6,9 +7,16 @@ from dataset_builder.services.progress_tracker import filter_new_ids, save_progr
 
 PROGRESS_FILE = Path("progress.json")
 
+sys.stderr.reconfigure(encoding="utf-8")
+
+_log_format = "%(asctime)s %(levelname)s %(message)s"
+logging.basicConfig(level=logging.INFO, format=_log_format)
+_file_handler = logging.FileHandler("dataset_builder.log", encoding="utf-8")
+_file_handler.setFormatter(logging.Formatter(_log_format))
+logging.getLogger().addHandler(_file_handler)
+
 
 def main():
-    logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     container = DependenciesContainer()
     reader = container.reader()
     ids = reader.list_ids()
