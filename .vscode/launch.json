@@ -2,6 +2,24 @@
     "version": "0.2.0",
     "configurations": [
         {
+            "name": "HF: upload evaluation dataset",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "dataset_builder.infrastructure.hf_dataset_manager",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "AWS_PROFILE": "portal"
+            },
+            "args": [
+                "--dataset-path", "output/evaluation",
+                "--repo-id", "portal-daf-yomi/portal-daf-yomi-evaluation",
+                "--no-split",
+                "--pretty-name", "Portal Daf Yomi Evaluation",
+                "--template-path", "evaluation_card_template.md"
+            ]
+        },
+        {
             "name": "HF: load, split & upload dataset",
             "type": "debugpy",
             "request": "launch",
@@ -12,9 +30,20 @@
                 "AWS_PROFILE": "portal"
             },
             "args": [
-                "--repo-id", "your-org/your-dataset-name",
+                "--repo-id", "portal-daf-yomi/portal-daf-yomi-whisper-training",
                 "--test-size", "0.1"
             ]
+        },
+        {
+            "name": "Python: eval_main.py",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/eval_main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "AWS_PROFILE": "portal"
+            }
         },
         {
             "name": "Python: main.py",

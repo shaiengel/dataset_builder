@@ -14,6 +14,7 @@ class Config:
     aws_region: str = field(default_factory=lambda: os.getenv("AWS_REGION", "us-east-1"))
     aws_profile: str = field(default_factory=lambda: os.getenv("AWS_PROFILE", "portal"))
     output_dataset_path: str = field(default_factory=lambda: os.getenv("OUTPUT_DATASET_PATH", "output/dataset"))
+    output_evaluation_path: str = field(default_factory=lambda: os.getenv("OUTPUT_EVALUATION_PATH", "output/evaluation"))
     card_language: str = field(default_factory=lambda: os.getenv("CARD_LANGUAGE", "he"))
     card_license: str = field(default_factory=lambda: os.getenv("CARD_LICENSE", "cc-by-4.0"))
     card_description: str = field(default_factory=lambda: os.getenv("CARD_DESCRIPTION", ""))

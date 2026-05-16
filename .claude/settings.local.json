@@ -3,7 +3,8 @@
     "allow": [
       "Bash(uv sync:*)",
       "Bash(python:*)",
-      "Bash(uv add:*)"
+      "Bash(uv add:*)",
+      "WebFetch(domain:www.gyan.dev)"
     ]
   }
 }

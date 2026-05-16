@@ -72,13 +72,17 @@ if __name__ == "__main__":
     parser.add_argument("--description", default=config.card_description, help="Dataset description")
     parser.add_argument("--pretty-name", default=config.card_pretty_name, help="Dataset pretty name")
     parser.add_argument("--template-path", default=config.card_template_path, help="Path to dataset card template")
+    parser.add_argument("--no-split", action="store_true", help="Upload dataset without train/test split")
     args = parser.parse_args()
 
     token = config.hf_token
     manager = HuggingFaceDatasetManager()
     dataset = manager.load_dataset_from_disk(args.dataset_path)
-    split = manager.split_dataset(dataset, test_size=args.test_size)
-    manager.upload_dataset_to_hub(split, args.repo_id, max_shard_size=config.max_shard_size, token=token)
+    if args.no_split:
+        manager.upload_dataset_to_hub(dataset, args.repo_id, max_shard_size=config.max_shard_size, token=token)
+    else:
+        split = manager.split_dataset(dataset, test_size=args.test_size)
+        manager.upload_dataset_to_hub(split, args.repo_id, max_shard_size=config.max_shard_size, token=token)
     card = manager.create_dataset_card(
         language=args.language,
         license=args.license,

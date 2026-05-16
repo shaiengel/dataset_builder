@@ -10,8 +10,9 @@ wheels/
 *.arrow
 *.vtt
 *.log
+evaluation/
 
-
+!eval_data.json
 !progress.json
 # Virtual environments
 .venv
