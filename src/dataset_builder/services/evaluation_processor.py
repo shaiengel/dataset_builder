@@ -20,7 +20,7 @@ class EvaluationProcessor:
             "audio": datasets.Audio(sampling_rate=16000),
             "transcript": datasets.Value("string"),
             "metadata": {
-                "id": datasets.Value("int64"),
+                "id": datasets.Value("string"),
                 "name": datasets.Value("string"),
                 "daf": datasets.Value("string"),
             },
