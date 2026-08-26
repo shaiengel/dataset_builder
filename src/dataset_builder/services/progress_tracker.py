@@ -2,12 +2,25 @@ import json
 from pathlib import Path
 
 
-def filter_new_ids(ids: list[str], progress_file: Path) -> list[str]:
-    if not progress_file.exists():
-        return ids
-    data = json.loads(progress_file.read_text())
-    seen = {lid for dataset in data.get("datasets", []) for lid in dataset.get("list_ids", [])}
+def _load_ids_from_file(file: Path) -> set[str]:
+    if not file.exists():
+        return set()
+    data = json.loads(file.read_text())
+    return set(data) if isinstance(data, list) else {lid for dataset in data.get("datasets", []) for lid in dataset.get("list_ids", [])}
+
+
+def filter_new_ids(ids: list[str], progress_file: Path, failed_file: Path | None = None) -> list[str]:
+    seen = _load_ids_from_file(progress_file)
+    if failed_file:
+        seen |= _load_ids_from_file(failed_file)
     return [i for i in ids if i not in seen]
+
+
+def save_failed_ids(ids: list[str], failed_file: Path) -> None:
+    existing = _load_ids_from_file(failed_file)
+    existing.update(ids)
+    failed_file.parent.mkdir(parents=True, exist_ok=True)
+    failed_file.write_text(json.dumps(sorted(existing), indent=2))
 
 
 def save_progress(ids: list[str], duration: int, progress_file: Path) -> None:

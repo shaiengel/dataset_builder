@@ -1,7 +1,8 @@
 import tempfile
 from pathlib import Path
-
+import logging
 from pydub import AudioSegment
+logger = logging.getLogger(__name__)
 
 
 def convert_mp3_to_wav(
@@ -17,6 +18,9 @@ def convert_mp3_to_wav(
         audio = AudioSegment.from_mp3(tmp_path)
         audio = audio.set_channels(1).set_frame_rate(sample_rate)
         audio.export(output_path, format="wav")
+    except Exception as e:
+        logger.error("Failed to convert MP3 to WAV: %s", e)
+        raise
     finally:
         tmp_path.unlink(missing_ok=True)
     return output_path

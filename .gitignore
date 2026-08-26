@@ -15,6 +15,7 @@ evaluation-il/
 
 !eval_data.json
 !progress.json
+!failed.json
 # Virtual environments
 .venv
 

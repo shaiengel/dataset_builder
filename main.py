@@ -1,11 +1,13 @@
+import argparse
 import logging
 import sys
 from pathlib import Path
 
 from dataset_builder.infrastructure.dependency_injection import DependenciesContainer
-from dataset_builder.services.progress_tracker import filter_new_ids, save_progress
+from dataset_builder.services.progress_tracker import filter_new_ids, save_failed_ids, save_progress
 
 PROGRESS_FILE = Path("progress.json")
+FAILED_FILE = Path("failed.json")
 
 sys.stderr.reconfigure(encoding="utf-8")
 
@@ -17,10 +19,18 @@ logging.getLogger().addHandler(_file_handler)
 
 
 def main():
+    parser = argparse.ArgumentParser(description="Build training dataset from S3 lessons")
+    parser.add_argument("--limit", type=int, default=None, help="Max number of new IDs to process per batch")
+    args = parser.parse_args()
+
     container = DependenciesContainer()
     reader = container.reader()
     ids = reader.list_ids()
-    ids = filter_new_ids(ids, PROGRESS_FILE)
+    ids = filter_new_ids(ids, PROGRESS_FILE, FAILED_FILE)
+
+    if args.limit is not None:
+        ids = ids[:args.limit]
+
     processor = container.processor()
     results = processor.process(ids)
 
@@ -57,6 +67,10 @@ def main():
 
     processed_ids = [lesson.id for lesson in results if lesson.segment_result is not None]
     save_progress(processed_ids, int(total_duration), PROGRESS_FILE)
+
+    failed_ids = [lesson.id for lesson in results if lesson.skip_reason]
+    if failed_ids:
+        save_failed_ids(failed_ids, FAILED_FILE)
 
 
 if __name__ == "__main__":

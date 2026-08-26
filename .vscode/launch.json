@@ -12,10 +12,10 @@
                 "AWS_PROFILE": "portal"
             },
             "args": [
-                "--dataset-path", "output/evaluation",
-                "--repo-id", "portal-daf-yomi/portal-daf-yomi-evaluation",
+                "--dataset-path", "output/evaluation-il",
+                "--repo-id", "portal-daf-yomi/portal-daf-yomi-evaluation-il",
                 "--no-split",
-                "--pretty-name", "Portal Daf Yomi Evaluation",
+                "--pretty-name", "Portal Daf Yomi Evaluation - Israeli Accent",
                 "--template-path", "evaluation_card_template.md"
             ]
         },
@@ -33,6 +33,34 @@
                 "--repo-id", "portal-daf-yomi/portal-daf-yomi-whisper-training",
                 "--test-size", "0.1"
             ]
+        },
+        {
+            "name": "HF: append to training dataset",
+            "type": "debugpy",
+            "request": "launch",
+            "module": "dataset_builder.infrastructure.hf_dataset_manager",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "AWS_PROFILE": "portal"
+            },
+            "args": [
+                "--append",
+                "--repo-id", "portal-daf-yomi/portal-daf-yomi-whisper-training",
+                "--test-size", "0.1"
+            ]
+        },
+        {
+            "name": "Python: main.py (batch 500)",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/main.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "env": {
+                "AWS_PROFILE": "portal"
+            },
+            "args": ["--limit", "500"]
         },
         {
             "name": "Python: eval_main.py",

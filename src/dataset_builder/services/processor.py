@@ -77,6 +77,8 @@ class LessonProcessor:
                         wav_path = convert_mp3_to_wav(data["audio"], tmp_path / f"{id}.wav")
                     except Exception as e:
                         logger.warning("[%s] Skipping — failed to convert MP3: %s", id, e)
+                        results.append(ProcessedLesson(id=id, transcript=transcript, vtt=vtt, segment_result=segment_result, wav_path=None, dataset=None, skip_reason="Failed to convert MP3 to WAV"))
+                        continue
 
                 dataset = None
                 if segment_result and wav_path:
