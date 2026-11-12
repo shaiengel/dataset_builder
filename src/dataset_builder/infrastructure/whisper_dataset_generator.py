@@ -434,7 +434,12 @@ class WhisperDatasetGenerator(DatasetGenerator):
         file_dataset = None
         dataset_features = Features(
             {
-                "audio": AudioColumnType(),
+                # Set the target sampling rate on the audio feature UP FRONT so
+                # each per-lesson dataset is written with the correct feature
+                # metadata. This avoids a final, single-threaded cast_column()
+                # over the whole concatenated dataset, which rewrites every audio
+                # blob and is the dominant end-of-run bottleneck on large datasets.
+                "audio": AudioColumnType(sampling_rate=WHISPER_EXPECTED_SAMPLE_RATE),
                 "transcript": ValueColumnType(dtype="string"),
                 "metadata": {
                     "seek": ValueColumnType(dtype="float32"),

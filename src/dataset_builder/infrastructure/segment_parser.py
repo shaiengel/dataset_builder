@@ -137,9 +137,17 @@ class SegmentParser:
         return state
 
     def _create_word_timing(self, word: Word) -> WordTiming:
-        """Create a WordTiming from a Word."""
+        """Create a WordTiming from a Word.
+
+        The word is prefixed with a single space (Whisper convention: each word
+        token carries its leading space). Segment text is then concatenated
+        directly with the surrounding timestamp tokens in
+        WhisperDatasetGenerator, yielding ``<|0.00|> word word<|1.00|>``.
+        A trailing-space layout (``<|0.00|>word word <|1.00|>``) tokenizes
+        differently and does not match how Whisper was pre-trained.
+        """
         return WordTiming(
-            word=f"{word.word.strip()} ",
+            word=f" {word.word.strip()}",
             start=word.start,
             end=word.end,
             probability=word.probability,
