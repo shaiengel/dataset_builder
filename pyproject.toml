@@ -14,7 +14,7 @@ dependencies = [
     "pydub>=0.25.1",
     "python-dotenv>=1.0.0",
     "stable-ts>=2.19.1",
-    "torchcodec>=0.11.0",
+    "torchcodec>=0.17.0",
 ]
 
 [build-system]

@@ -6,6 +6,11 @@ from dotenv import load_dotenv
 load_dotenv()
 load_dotenv(".env.secret")
 
+# torchcodec (used by datasets' Audio feature) loads FFmpeg's shared DLLs at runtime.
+# On Windows, Python does not search PATH for them, so register the folder explicitly.
+if os.name == "nt" and (ffmpeg_dll_dir := os.getenv("FFMPEG_DLL_DIR")):
+    os.add_dll_directory(ffmpeg_dll_dir)
+
 
 @dataclass
 class Config:
