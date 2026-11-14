@@ -390,6 +390,7 @@ dependencies = [
     { name = "boto3" },
     { name = "datasets" },
     { name = "dependency-injector" },
+    { name = "hebrew" },
     { name = "pydub" },
     { name = "python-dotenv" },
     { name = "stable-ts" },
@@ -408,6 +409,7 @@ requires-dist = [
     { name = "boto3", specifier = ">=1.35.0" },
     { name = "datasets", specifier = ">=4.8.4" },
     { name = "dependency-injector", specifier = ">=4.41.0" },
+    { name = "hebrew", specifier = ">=0.8.1" },
     { name = "pydub", specifier = ">=0.25.1" },
     { name = "python-dotenv", specifier = ">=1.0.0" },
     { name = "stable-ts", specifier = ">=2.19.1" },
@@ -583,12 +585,30 @@ http = [
 ]
 
 [[package]]
+name = "grapheme"
+version = "0.6.0"
+source = { registry = "https://pypi.org/simple" }
+sdist = { url = "https://files.pythonhosted.org/packages/ce/e7/bbaab0d2a33e07c8278910c1d0d8d4f3781293dfbc70b5c38197159046bf/grapheme-0.6.0.tar.gz", hash = "sha256:44c2b9f21bbe77cfb05835fec230bd435954275267fea1858013b102f8603cca", size = 207306, upload-time = "2020-03-07T17:13:55.492Z" }
+
+[[package]]
 name = "h11"
 version = "0.16.0"
 source = { registry = "https://pypi.org/simple" }
 sdist = { url = "https://files.pythonhosted.org/packages/01/ee/02a2c011bdab74c6fb3c75474d40b3052059d95df7e73351460c8588d963/h11-0.16.0.tar.gz", hash = "sha256:4e35b956cf45792e4caa5885e69fba00bdbc6ffafbfa020300e549b208ee5ff1", size = 101250, upload-time = "2025-04-24T03:35:25.427Z" }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/04/4b/29cac41a4d98d144bf5f6d33995617b185d14b22401f75ca86f384e87ff1/h11-0.16.0-py3-none-any.whl", hash = "sha256:63cf8bbe7522de3bf65932fda1d9c2772064ffb3dae62d55932da54b31cb6c86", size = 37515, upload-time = "2025-04-24T03:35:24.344Z" },
+]
+
+[[package]]
+name = "hebrew"
+version = "0.8.1"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "grapheme" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/4f/83/b583f6d62ecdbdad6ba3855702d42643d764e2ab440c56e757116947fce8/hebrew-0.8.1.tar.gz", hash = "sha256:4a90bbb5cd3bcffc7c6b4e0bd12a2e29bea377ce40f07e0623aba6c0ce02c4b4", size = 24714, upload-time = "2024-02-25T04:35:36.473Z" }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/83/f2/0c3b7cba7031e9263aacdfc339f318918d0fb18fa3813f85c429eb6302c1/hebrew-0.8.1-py3-none-any.whl", hash = "sha256:7f2a832a193a2cdcdb444945e6fc481deaaa9f0163f592f304ab960ad3445d08", size = 26909, upload-time = "2024-02-25T04:35:34.603Z" },
 ]
 
 [[package]]

@@ -10,6 +10,7 @@ dependencies = [
     "boto3>=1.35.0",
     "datasets>=4.8.4",
     "dependency-injector>=4.41.0",
+    "hebrew>=0.8.1",
     "pydub>=0.25.1",
     "python-dotenv>=1.0.0",
     "stable-ts>=2.19.1",

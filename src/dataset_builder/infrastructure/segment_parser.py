@@ -139,19 +139,22 @@ class SegmentParser:
     def _create_word_timing(self, word: Word) -> WordTiming:
         """Create a WordTiming from a Word.
 
-        The word is prefixed with a single space (Whisper convention: each word
-        token carries its leading space). Segment text is then concatenated
-        directly with the surrounding timestamp tokens in
-        WhisperDatasetGenerator, yielding ``<|0.00|> word word<|1.00|>``.
-        A trailing-space layout (``<|0.00|>word word <|1.00|>``) tokenizes
-        differently and does not match how Whisper was pre-trained.
+        Prefix with a leading space to match stable_whisper's native format.
+        Segment.text then produces " word1 word2", yielding
+        <|0.00|> word1 word2<|1.00|> — the layout Whisper expects.
         """
+        # return WordTiming(
+        #     word=f" {word.word.strip()}",
+        #     start=word.start,
+        #     end=word.end,
+        #     probability=word.probability,
+        # )
         return WordTiming(
-            word=f" {word.word.strip()}",
-            start=word.start,
-            end=word.end,
-            probability=word.probability,
-        )
+                word=f"{word.word}",
+                start=word.start,
+                end=word.end,
+                probability=word.probability,
+            )
 
     def _convert_list_to_segments(self, word_timings_list: list[list[WordTiming]]) -> list[Segment]:
         """Build Segment objects from list of word timings."""
