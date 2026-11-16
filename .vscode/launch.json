@@ -31,7 +31,8 @@
             },
             "args": [
                 "--repo-id", "portal-daf-yomi/portal-daf-yomi-whisper-dataset",
-                "--test-size", "0.1"
+                "--test-size", "0.01",
+                "--group-by", "source_id"
             ]
         },
         {

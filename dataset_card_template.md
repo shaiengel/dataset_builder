@@ -19,6 +19,7 @@
 {{ dataset_description | default("", true) }}
 
 - **License:** {{ license | default("[More Information Needed]", true)}}
+- **Curated by:** Shai Engel
 
 ## Dataset Structure
 

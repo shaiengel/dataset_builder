@@ -84,6 +84,7 @@ src/dataset_builder/
 ## Output Paths
 
 - `output/dataset` — training dataset (Arrow format)
+- `output/dataset_split` — train/test split saved by the upload CLI before pushing; re-upload a failed push with `--dataset-path output/dataset_split`
 - `output/evaluation` — evaluation dataset (Arrow format)
 
 ## HuggingFace Upload
