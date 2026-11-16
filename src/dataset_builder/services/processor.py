@@ -113,6 +113,12 @@ class LessonProcessor:
                 )                
 
         if all_datasets:
+            # output_path = Path(self._config.output_dataset_path)
+            # if output_path.exists():
+            #     existing = self._dataset_manager.load_dataset_from_disk(str(output_path))
+            #     logger.info("Loaded existing dataset with %d rows", len(existing))
+            #     all_datasets.insert(0, existing)
+
             combined = self._dataset_manager.concatenate_all_datasets(all_datasets)
             self._dataset_manager.save_to_disk(combined, self._config.output_dataset_path)
         else:

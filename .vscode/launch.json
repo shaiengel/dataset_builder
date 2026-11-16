@@ -30,7 +30,7 @@
                 "AWS_PROFILE": "portal"
             },
             "args": [
-                "--repo-id", "portal-daf-yomi/portal-daf-yomi-whisper-training",
+                "--repo-id", "portal-daf-yomi/portal-daf-yomi-whisper-dataset",
                 "--test-size", "0.1"
             ]
         },
@@ -83,6 +83,18 @@
             "env": {
                 "AWS_PROFILE": "portal"
             }
+        },
+        {
+            "name": "Merge datasets",
+            "type": "debugpy",
+            "request": "launch",
+            "program": "${workspaceFolder}/merge_datasets.py",
+            "console": "integratedTerminal",
+            "cwd": "${workspaceFolder}",
+            "args": [
+                "output/dataset1", "output/dataset2", "output/dataset3", "output/dataset4",
+                "--output", "output/dataset-merged"
+            ]
         }
     ]
 }
